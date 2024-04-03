@@ -4,7 +4,6 @@ import tkinter as tk
 import credentials
 import psycopg2
 from tkinter import messagebox
-from keyboard_listener import on_key_press
 
 
 def start_app():
@@ -39,17 +38,18 @@ def start_app():
                 label_online.place(x=150, y=10)
                 # Показать кнопку "Выход"
                 btn_exit.place(x=10, y=60)
-
-                on_key_press(root)
+                print('user_record')
+                return True
 
             else:
                 messagebox.showerror("Ошибка", "Неверный логин или пароль")
                 # Очищаем поля ввода для повторного ввода
                 entry_username.delete(0, tk.END)
                 entry_password.delete(0, tk.END)
-
+                return False
         except Exception as error:
             messagebox.showerror("Ошибка", f"Ошибка при работе с PostgreSQL: {error}")
+            return False
 
     def submit_credentials():
         username = entry_username.get()
@@ -94,3 +94,5 @@ def start_app():
 
     # Запускаем цикл обработки событий
     root.mainloop()
+
+    return authenticate
