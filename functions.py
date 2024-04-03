@@ -1,39 +1,22 @@
-from tkinter import messagebox
+import sys
 import os
 import tkinter as tk
-import psycopg2
-
-# from keyboard_listener import on_key_press
 import credentials
-
-import sys
-
-sys.path.append('/home/mikhail/PycharmProjects/screenshots/.venv/lib/python3.10/site-packages')
-
-
-
-# def take_screenshot(file_path):
-#     # Делаем скриншот текущего экрана
-#     screenshot = pyautogui.screenshot()
-#
-#     # Сохраняем скриншот в указанный файл
-#     screenshot.save(file_path)
-#
-#     print(f"Скриншот сохранен в файле: {file_path}")
-#
-#
-# if __name__ == "__main__":
-#     file_path = "screenshot.png"  # Путь и имя файла, куда будет сохранен скриншот
-#     take_screenshot(file_path)
+import psycopg2
+from tkinter import messagebox
+from keyboard_listener import on_key_press
 
 
 def start_app():
     def authenticate(username, password):
         try:
             # Подключаемся к базе данных
-            connection = credentials.conn
+            conn = psycopg2.connect(host=credentials.connection_string['host'],
+                                    database=credentials.connection_string['database'],
+                                    user=credentials.connection_string['user'],
+                                    password=credentials.connection_string['password'])
 
-            cursor = connection.cursor()
+            cursor = conn.cursor()
 
             # Выполняем SQL-запрос для поиска пользователя с данными логином и паролем
             cursor.execute("SELECT * FROM users WHERE user_id = %s AND password = %s", (username, password))
@@ -45,7 +28,7 @@ def start_app():
                 messagebox.showinfo("Успех", "Аутентификация прошла успешно")
                 # Закрываем курсор и соединение с базой данных
                 cursor.close()
-                connection.close()
+                conn.close()
                 # Скрыть поля ввода логина и пароля
                 label_username.place_forget()
                 entry_username.place_forget()
@@ -57,13 +40,15 @@ def start_app():
                 # Показать кнопку "Выход"
                 btn_exit.place(x=10, y=60)
 
+                on_key_press(root)
+
             else:
                 messagebox.showerror("Ошибка", "Неверный логин или пароль")
                 # Очищаем поля ввода для повторного ввода
                 entry_username.delete(0, tk.END)
                 entry_password.delete(0, tk.END)
 
-        except (Exception, psycopg2.Error) as error:
+        except Exception as error:
             messagebox.showerror("Ошибка", f"Ошибка при работе с PostgreSQL: {error}")
 
     def submit_credentials():
