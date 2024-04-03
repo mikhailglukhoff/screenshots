@@ -1,14 +1,16 @@
 from tkinter import messagebox
 import os
+import tkinter as tk
+import psycopg2
 
-from keyboard_listener import on_key_press
+# from keyboard_listener import on_key_press
 import credentials
 
 import sys
 
 sys.path.append('/home/mikhail/PycharmProjects/screenshots/.venv/lib/python3.10/site-packages')
-import tkinter as tk
-import psycopg2
+
+
 
 # def take_screenshot(file_path):
 #     # Делаем скриншот текущего экрана
@@ -54,9 +56,6 @@ def start_app():
                 label_online.place(x=150, y=10)
                 # Показать кнопку "Выход"
                 btn_exit.place(x=10, y=60)
-
-                # Начать ожидание комбинации клавиш для выполнения другой функции
-                # on_key_press(root)  # Запускаем функцию из файла keyboard_listener под root
 
             else:
                 messagebox.showerror("Ошибка", "Неверный логин или пароль")
