@@ -5,12 +5,10 @@ import keyboard
 
 
 def start_key_listener():
-    def on_key_press(event):
-        print('Нажата клавиша:', event.name)
-
-    # Регистрируем обработчик события нажатия клавиш
-    keyboard.on_press(on_key_press)
-
-    # Запускаем "бесконечный" цикл для удержания программы активной
     while True:
-        pass
+        def on_key_press(event):
+            print('Нажата клавиша:', event.name)
+
+        # Регистрируем обработчик события нажатия клавиш
+        p = keyboard.on_press(on_key_press)
+        print(p)

@@ -65,6 +65,8 @@ def start_app():
         python = sys.executable
         os.execl(python, python, *sys.argv)
 
+    key_listener_active = False
+
     # Создаем главное окно
     root = tk.Tk()
     root.title("LOGIN")
