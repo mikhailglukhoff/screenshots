@@ -4,6 +4,7 @@ import sys
 import psycopg2
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QMessageBox
 
+from functions import *
 from settings import *
 
 is_authorised = False
@@ -50,6 +51,7 @@ class LoginWindow(QWidget):
 
     def submit_credentials(self):
         global is_authorised
+        global username_global
         username = self.entry_username.text()
         password = self.entry_password.text()
         if username and password:
@@ -77,7 +79,12 @@ class LoginWindow(QWidget):
 
                     self.btn_submit.hide()
                     self.btn_exit.show()
+
                     is_authorised = True
+                    username_global = username
+
+                    if is_authorised:
+                        handle_hotkey_press(username_global)
                 else:
                     # Неверное имя пользователя или пароль
                     QMessageBox.warning(self, "Error", "Invalid username or password")
