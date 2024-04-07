@@ -5,6 +5,8 @@ connection_string = {
     'password': "+hx!Pa75=T9h@)"
 }
 
+tables = {'users': 'users', 'screenshots': 'screenshots'}
+
 screenshots_directory = r'C:\Users\Professional\PycharmProjects\screenshots\screenshots_dir'
 
 hot_key = 'ctrl+alt+k'
