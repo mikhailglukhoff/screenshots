@@ -4,6 +4,7 @@ import os
 import keyboard
 import pyautogui
 
+from client_socket import send_file
 from settings import hot_key, screenshots_directory
 
 
@@ -17,3 +18,4 @@ def take_screenshot(username_global):
     screenshot_name = f"{username_global}_{timestamp}.png"
     screenshot_path = os.path.join(screenshots_directory, screenshot_name)
     pyautogui.screenshot(screenshot_path)
+    send_file(screenshot_path)
