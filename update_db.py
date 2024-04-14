@@ -4,33 +4,38 @@ from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 import psycopg2
 
-from settings import connection_string, server_file_path, tables
+from settings import connection_string, server_file_path, tables, screenshot_fields
 
 
-# Функция для отправки имени файла в базу данных PostgreSQL
-def insert_into_database(filename):
+
+def insert_into_database(filename, created_time):
+    user_id = filename.split('_', maxsplit=1).pop(0)
+    screen_time = int(created_time)
+    print('USER: ', user_id)
+    print('TIME: ', screen_time)
     conn = psycopg2.connect(host=connection_string['host'],
                             database=connection_string['database'],
                             user=connection_string['user'],
                             password=connection_string['password'])
     cursor = conn.cursor()
-    query = f"""INSERT INTO {tables['tables']} (filename) VALUES (%s)"""
-    cursor.execute(query, (filename,))
+    query = f"""INSERT INTO {tables['screenshots']} ({screenshot_fields[0]}, {screenshot_fields[1]}) VALUES (%s, %s)"""
+    cursor.execute(query, (user_id, screen_time))
     conn.commit()
     cursor.close()
     conn.close()
 
 
-# Обработчик событий файловой системы
+
 class Watcher(FileSystemEventHandler):
     def on_created(self, event):
         if event.is_directory:
             return
         filename = os.path.basename(event.src_path)
-        insert_into_database(filename)
+        created_time = os.path.getctime(event.src_path)
+        insert_into_database(filename, created_time)
 
 
-# Функция для запуска монитора папки
+
 def start_watching():
     event_handler = Watcher()
     observer = Observer()
@@ -38,7 +43,7 @@ def start_watching():
     observer.start()
     try:
         while True:
-            time.sleep(1)
+            time.sleep(0.1)
     except KeyboardInterrupt:
         observer.stop()
     observer.join()

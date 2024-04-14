@@ -56,21 +56,18 @@ class LoginWindow(QWidget):
         password = self.entry_password.text()
         if username and password:
             try:
-                # Подключаемся к базе данных
                 conn = psycopg2.connect(host=connection_string['host'],
                                         database=connection_string['database'],
                                         user=connection_string['user'],
                                         password=connection_string['password'])
                 cursor = conn.cursor()
 
-                # Выполняем SQL-запрос для проверки имени пользователя и пароля
-                cursor.execute("SELECT * FROM users WHERE user_id = %s AND password = %s", (username, password))
+                cursor.execute(f"""SELECT * FROM users WHERE {login_fields[0]} = %s AND {login_fields[1]} = %s""",
+                               (username, password))
 
-                # Получаем результат запроса
                 user_record = cursor.fetchone()
 
                 if user_record:
-                    # Авторизация успешна, изменяем статус и скрываем окно авторизации
                     self.label_status.setText("Online")
                     self.label_username.hide()
                     self.entry_username.hide()
@@ -86,13 +83,11 @@ class LoginWindow(QWidget):
                     if is_authorised:
                         handle_hotkey_press(username_global)
                 else:
-                    # Неверное имя пользователя или пароль
                     QMessageBox.warning(self, "Error", "Invalid username or password")
                     self.entry_username.clear()
                     self.entry_password.clear()
                     is_authorised = False
 
-                # Закрываем курсор и соединение с базой данных
                 cursor.close()
                 conn.close()
 

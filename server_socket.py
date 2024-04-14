@@ -17,13 +17,10 @@ def receive_file():
             connection, address = server_socket.accept()
             print("Connected by", address)
 
-            # Получаем имя файла
             file_name = connection.recv(1024).decode()
 
-            # Создаем путь для сохранения файла
             file_path = os.path.join(server_file_path, file_name)
 
-            # Получаем содержимое файла и сохраняем его
             with open(file_path, 'wb') as file:
                 while True:
                     data = connection.recv(4096)
@@ -33,7 +30,7 @@ def receive_file():
 
             print(f"File {file_name} received successfully.")
 
-            # Закрываем соединение
+
             connection.close()
 
 

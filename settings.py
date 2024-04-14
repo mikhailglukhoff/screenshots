@@ -7,9 +7,16 @@ connection_string = {
 
 tables = {'users': 'users', 'screenshots': 'screenshots'}
 
+login_fields = ('user_id', 'password')
+screenshot_fields = ('user_id', 'screen_time')
+
 screenshots_directory = r'C:\Users\Professional\PycharmProjects\screenshots\screenshots_dir'
 
 hot_key = 'ctrl+alt+k'
 
 server_file_path = r'C:\Users\Professional\PycharmProjects\screenshots\server_dir'
 server_host_port = ('localhost', 12345)
+
+screenshot_interval = 180
+
+start_time, end_time = (1712689230, 1712689500)
