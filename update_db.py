@@ -1,11 +1,11 @@
 import os
 import time
-from watchdog.observers import Observer
-from watchdog.events import FileSystemEventHandler
+
 import psycopg2
+from watchdog.events import FileSystemEventHandler
+from watchdog.observers import Observer
 
 from settings import connection_string, server_file_path, tables, screenshot_fields
-
 
 
 def insert_into_database(filename, created_time):
@@ -25,7 +25,6 @@ def insert_into_database(filename, created_time):
     conn.close()
 
 
-
 class Watcher(FileSystemEventHandler):
     def on_created(self, event):
         if event.is_directory:
@@ -33,7 +32,6 @@ class Watcher(FileSystemEventHandler):
         filename = os.path.basename(event.src_path)
         created_time = os.path.getctime(event.src_path)
         insert_into_database(filename, created_time)
-
 
 
 def start_watching():

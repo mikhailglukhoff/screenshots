@@ -19,4 +19,4 @@ server_host_port = ('localhost', 12345)
 
 screenshot_interval = 180
 
-start_time, end_time = (1712689230, 1712689500)
+start_time, end_time = (1713896212, 1713897950)

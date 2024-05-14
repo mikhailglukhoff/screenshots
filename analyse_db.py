@@ -40,7 +40,7 @@ def get_unique_users(timings):
     return list(users_set)
 
 
-print(get_unique_users(timings))
+print('UNIQUE USERS: ', get_unique_users(timings))
 
 
 def generate_group_name(i):

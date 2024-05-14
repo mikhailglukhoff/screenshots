@@ -20,7 +20,7 @@ def receive_file():
             file_name = connection.recv(1024).decode()
 
             file_path = os.path.join(server_file_path, file_name)
-
+            print('SERVER PATH: ', file_path)
             with open(file_path, 'wb') as file:
                 while True:
                     data = connection.recv(4096)
@@ -29,7 +29,6 @@ def receive_file():
                     file.write(data)
 
             print(f"File {file_name} received successfully.")
-
 
             connection.close()
 
