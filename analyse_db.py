@@ -1,31 +1,26 @@
-import psycopg2
-from settings import connection_string, screenshot_interval, start_time, end_time
+import os
+import settings
+from dotenv import load_dotenv
+from sqlalchemy import create_engine
 
-start, end = (start_time, end_time)
+load_dotenv()
+
+psql_string = os.getenv('DATABASE_URL')
+engine = create_engine(psql_string)
 
 
-def get_timings():
-    conn = psycopg2.connect(host=connection_string['host'],
-                            database=connection_string['database'],
-                            user=connection_string['user'],
-                            password=connection_string['password'])
-
-    cur = conn.cursor()
-
-    query = """
+def get_timings(start=settings.start_time, end=settings.end_time):
+    query = f"""
                 SELECT * 
-                FROM screenshots
+                FROM {settings.tables['screenshots']}
                 WHERE screen_time >= %s AND screen_time <= %s
                 ORDER BY screen_time;
             """
+    with engine.connect() as connection:
+        results = connection.execute(query, (start, end))
 
-    cur.execute(query, (start, end))
-
-    screenshot_timings = cur.fetchall()
-
-    cur.close()
-    conn.close()
-
+    screenshot_timings = results.fetchall()
+    print('OK')
     return screenshot_timings
 
 
@@ -55,7 +50,7 @@ def analyse_groups(timings):
     for i in range(len(timings)):
         current_time = timings[i][1]
 
-        if i == 0 or current_time - timings[i - 1][1] > screenshot_interval:
+        if i == 0 or current_time - timings[i - 1][1] > settings.screenshot_interval:
             # Начинаем новую группу
             group_name = generate_group_name(group_index)
             groups[group_name] = {}

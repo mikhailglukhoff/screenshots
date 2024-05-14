@@ -1,11 +1,16 @@
 import os
 import socket
+from dotenv import load_dotenv
 
-from settings import server_file_path, server_host_port
+load_dotenv()
+
+server_file_path = os.getenv("SERVER_FILE_PATH")
+server_host = os.getenv("SERVER_HOST")
+server_port = int(os.getenv("SERVER_PORT"))
 
 
 def receive_file():
-    host, port = server_host_port
+    host, port = server_host, server_port
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
         server_socket.bind((host, port))
